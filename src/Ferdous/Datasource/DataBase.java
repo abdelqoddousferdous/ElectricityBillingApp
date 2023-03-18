@@ -8,6 +8,8 @@ public class DataBase {
     private final String ConnectionUrl = "jdbc:sqlite:C:\\Users\\abdelFerdous\\IdeaProjects\\ElectricityBillingApp\\ElectricityBilling.db";
     private static Connection conn ;
     private static Statement statement;
+    private static PreparedStatement preparedStatement ;
+    private static String  prepareQuery = "SELECT * from login where username = ? and password = ? and user = ? ";
 
     public static final String Login_Table = " login ";
     public static final String Customer_Table = " customer ";
@@ -36,15 +38,18 @@ public class DataBase {
 
     public ResultSet loginQuery(String username , String password , String accountType){
         try {
+            preparedStatement = conn.prepareStatement(prepareQuery);
+            preparedStatement.setString(1,username);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3,accountType);
 
-
-            res = statement.executeQuery("Select * from " + Login_Table + " where username = '" + username + "'" +
-                    " and password = '" + password + "' and user = '" + accountType + "'");
+            ResultSet res = preparedStatement.executeQuery();
+                    //"and password = '" + password + "' and user = '" + accountType + "'");
            return res ;
 
         }catch (SQLException e){
             System.out.println("Error Login Query :"+ e.getMessage());
-            return null ;
+            return null;
         }
 
     }

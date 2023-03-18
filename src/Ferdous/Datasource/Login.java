@@ -86,36 +86,37 @@ public class Login extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String username = usernameLabel.getText();
-        String password = passwordLabel.getText();
-        String accountType = choice.getSelectedItem();
         try {
-        if(e.getSource() == loginButton) {
-            DataBase.getInstance().openDb();
-            ResultSet res = DataBase.getInstance().loginQuery(username, password, accountType);
-            if (res.next()) {
-                String meter = res.getString(1);
-               // new ProjectWindow(meter, accountType).setVisible(true);
+            if (e.getSource() == loginButton) {
+                String username = textField.getText();
+                String password = passwordField.getText();
+                String accountType = choice.getSelectedItem();
+                DataBase.getInstance().openDb();
+                ResultSet res = DataBase.getInstance().loginQuery(username, password, accountType);
+                if (res.next()) {
+                    JOptionPane.showMessageDialog(null, "you logged in");
+                    // String meter = res.getString(1);
+                    // new ProjectWindow(meter, accountType).setVisible(true);
+                    this.setVisible(false);
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid username/password");
+                    textField.setText("");
+                    passwordField.setText("");
+                }
+            } else if (e.getSource() == cancelButton) {
                 this.setVisible(false);
-
-            }else{
-                JOptionPane.showMessageDialog(null , "Invalid username/password");
-                usernameLabel.setText("");
-                passwordLabel.setText("");
+            } else if (e.getSource() == signupButton) {
+                new Signup().setVisible(true);
             }
-        }else if(e.getSource() == cancelButton){
-            this.setVisible(false);
-        }else if(e.getSource() == signupButton){
-            new Signup().setVisible(true);
-        }
+
+            DataBase.getInstance().closeDb();
+
+
         }catch (SQLException ex){
-                ex.printStackTrace();
-            }
-
-        DataBase.getInstance().closeDb();
-
-
+            System.out.println("Action Listener Error"+ ex.getMessage());
         }
+    }
 
 
 
