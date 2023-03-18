@@ -56,10 +56,17 @@ public class Login extends JFrame implements ActionListener {
         add(cancelButton);
 
         ImageIcon signupIcon = new ImageIcon(ClassLoader.getSystemResource("Ferdous\\Graphics\\signup.png"));
-         image = signupIcon.getImage().getScaledInstance(16 ,16 , Image.SCALE_DEFAULT);
+        image = signupIcon.getImage().getScaledInstance(16 ,16 , Image.SCALE_DEFAULT);
         signupButton = new JButton("Sign up" , new ImageIcon(image));
         signupButton.setBounds(380 , 200 , 130 , 20);
         add(signupButton);
+
+        ImageIcon icon = new ImageIcon(ClassLoader.getSystemResource("Ferdous\\Graphics\\second.jpg"));
+        image = icon.getImage().getScaledInstance(250 ,250 , Image.SCALE_DEFAULT);
+        ImageIcon icon1 = new ImageIcon(image);
+        label4 = new JLabel(icon1);
+        label4.setBounds(0 , 0 , 250 , 250);
+        add(label4);
 
         loginButton.addActionListener(this);
         cancelButton.addActionListener(this);
