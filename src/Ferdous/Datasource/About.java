@@ -50,7 +50,7 @@ public class About extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      
+
         dispose();
       //System.exit(0);
     }
