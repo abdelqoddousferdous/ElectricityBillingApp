@@ -15,9 +15,9 @@ public class DataBase {
     public static final String Tax_Table = " tax ";
     public static final String Bill_Table = " bill ";
     private ResultSet res ;
-    private DataBase(){}
 
-    public DataBase getInstance(){
+
+    public static DataBase getInstance(){
         return instance ;
     }
 
@@ -33,6 +33,23 @@ public class DataBase {
         }
 
     }
+
+    public ResultSet loginQuery(String username , String password , String accountType){
+        try {
+
+
+            res = statement.executeQuery("Select * from " + Login_Table + " where username = '" + username + "'" +
+                    " and password = '" + password + "' and user = '" + accountType + "'");
+           return res ;
+
+        }catch (SQLException e){
+            System.out.println("Error Login Query :"+ e.getMessage());
+            return null ;
+        }
+
+    }
+
+
 
     public  void closeDb(){
         try {

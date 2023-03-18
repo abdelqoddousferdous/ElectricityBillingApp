@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Login extends JFrame implements ActionListener {
 
@@ -84,7 +86,37 @@ public class Login extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-    }
+        String username = usernameLabel.getText();
+        String password = passwordLabel.getText();
+        String accountType = choice.getSelectedItem();
+        try {
+        if(e.getSource() == loginButton) {
+            DataBase.getInstance().openDb();
+            ResultSet res = DataBase.getInstance().loginQuery(username, password, accountType);
+            if (res.next()) {
+                String meter = res.getString(1);
+                new ProjectWindow(meter, accountType).setVisible(true);
+                this.setVisible(false);
+
+            }else{
+                JOptionPane.showMessageDialog(null , "Invalid username/password");
+                usernameLabel.setText("");
+                passwordLabel.setText("");
+            }
+        }else if(e.getSource() == cancelButton){
+            this.setVisible(false);
+        }else if(e.getSource() == signupButton){
+            new Signup().setVisible(true);
+        }
+        }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+
+
+        }
+
+
+
 
     public static void main(String[] args) {
         new Login().setVisible(true);
