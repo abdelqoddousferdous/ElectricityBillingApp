@@ -95,8 +95,8 @@ public class Login extends JFrame implements ActionListener {
                 ResultSet res = DataBase.getInstance().loginQuery(username, password, accountType);
                 if (res.next()) {
                     JOptionPane.showMessageDialog(null, "you logged in");
-                    // String meter = res.getString(1);
-                    // new ProjectWindow(meter, accountType).setVisible(true);
+                     String meter = res.getString(1);
+                     new ProjectWindow(meter, accountType).setVisible(true);
                     this.setVisible(false);
 
                 } else {
