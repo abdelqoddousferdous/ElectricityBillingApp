@@ -5,8 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class ProjectWindow extends JFrame implements ActionListener {
+public class ProjectWindow extends JFrame implements ActionListener, KeyListener {
 
     private String meter ;
     ProjectWindow(String meter, String accountType){
@@ -80,6 +81,7 @@ public class ProjectWindow extends JFrame implements ActionListener {
         JMenu info = new JMenu("Information");
         JMenuItem info1 = new JMenuItem("Update Information");
         JMenuItem info2 = new JMenuItem("View Information");
+
 
         info.setForeground(Color.RED);
 
@@ -264,7 +266,22 @@ public class ProjectWindow extends JFrame implements ActionListener {
 
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
     public static void main(String[] args) {
-        new ProjectWindow("abdo" , "Admin").setVisible(true);
+        new ProjectWindow("abdo" , "Customer").setVisible(true);
     }
 }
