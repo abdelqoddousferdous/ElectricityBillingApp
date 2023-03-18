@@ -12,7 +12,8 @@ import java.awt.event.ItemListener;
 public class Signup extends JFrame implements ActionListener {
 
     JPanel panel;
-    JTextField usernameTextField, nameTextField, passwordTextField, meterTextField;
+    JTextField usernameTextField, nameTextField,  meterTextField;
+    JPasswordField passwordTextField ;
     Choice choice;
     JButton registerButton, backButton;
     Signup(){
@@ -53,7 +54,7 @@ public class Signup extends JFrame implements ActionListener {
         l3.setBounds(100, 130, 100, 20);
         panel.add(l3);
 
-        passwordTextField = new JTextField();
+        passwordTextField = new JPasswordField();
         passwordTextField.setBounds(260, 130, 150, 20);
         panel.add(passwordTextField);
 
@@ -122,6 +123,34 @@ public class Signup extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        if(e.getSource() == registerButton){
+            String username = usernameTextField.getText();
+            String name = nameTextField.getText();
+            String password = passwordTextField.getText();
+            String account = choice.getSelectedItem();
+            String meter = meterTextField.getText();
+            String query ;
+            if(DataBase.getInstance().openDb()) {
+                if (account.equals("Admin")) {
+                    query = "INSERT into login values( '" + meter + "' , '" + username + "' , '" + name + "' , '" + password + "' , '" + account + "')";
+                } else {
+                    query = "INSERT into login(username , name , password , user) values ('" + username + "' , '" + name + "' , '" + password + "' , '" + account + "')";
+                }
+
+                if (DataBase.getInstance().signupQuery(query)) {
+                    JOptionPane.showMessageDialog(null, "Account created successfully");
+                    this.setVisible(false);
+                    new Login().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error try Again");
+
+                }
+            }
+        } else if(e.getSource() == backButton){
+            this.setVisible(false);
+            new Login().setVisible(true);
+        }
 
     }
 

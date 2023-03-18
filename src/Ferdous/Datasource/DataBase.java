@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DataBase {
 
-    private static  DataBase instance ;
+    private static  DataBase instance = new DataBase();
     private final String ConnectionUrl = "jdbc:sqlite:C:\\Users\\abdelFerdous\\IdeaProjects\\ElectricityBillingApp\\ElectricityBilling.db";
     private static Connection conn ;
     private static Statement statement;
@@ -45,6 +45,17 @@ public class DataBase {
         }catch (SQLException e){
             System.out.println("Error Login Query :"+ e.getMessage());
             return null ;
+        }
+
+    }
+
+    public boolean  signupQuery(String Query) {
+        try {
+            statement.execute(Query);
+            return true;
+        }catch (SQLException e){
+            System.out.println("Error while registering :"+ e.getMessage());
+            return false;
         }
 
     }

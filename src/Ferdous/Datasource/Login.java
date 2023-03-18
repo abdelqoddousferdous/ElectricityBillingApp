@@ -112,6 +112,8 @@ public class Login extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
 
+        DataBase.getInstance().closeDb();
+
 
         }
 
