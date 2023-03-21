@@ -12,6 +12,9 @@ public class DataBase {
     private static String  prepareQuery = "SELECT * from login where username = ? and password = ? and user = ? ";
     private static String prepareBillQuery = "select * from bill where meter = ? AND month = ?";
     private static String prepareMeterInsertion = "INSERT INTO meter values( ? , ? , ? , ?)";
+    private static String prepareBillInsertion = "insert into bill values( ? , ? , ? ,? , 'Not Paid')";
+
+    private  static  String prepareCustomerUpdate = "update customer set address = '"+s3+"', city = '"+s4+"', state = '"+s5+"', email = '"+s6+"', phone = '"+s7+"' where meter = '"+meter+"'"
 
 
     public static final String Login_Table = " login ";
@@ -61,6 +64,27 @@ public class DataBase {
         }
 
     }
+    public int billInsertionQuery( String meter_number , String month , String unit ,int total_bill ){
+
+        try {
+            preparedStatement = conn.prepareStatement(prepareBillInsertion);
+
+            preparedStatement.setString(1, meter_number);
+            preparedStatement.setString(2, month);
+            preparedStatement.setString(3, unit);
+            preparedStatement.setString(4, ""+total_bill);
+
+
+            int row = preparedStatement.executeUpdate();
+            return row;
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            return -1 ;
+
+        }
+
+    }
 
     public ResultSet billQuery(){
         try{
@@ -94,6 +118,30 @@ public class DataBase {
          System.out.println(e.getMessage());
          return null ;
      }
+
+    }
+    public ResultSet customerQuery(String meter){
+        try {
+            preparedStatement = conn.prepareStatement("SELECT * from customer where meter = ?");
+           preparedStatement.setString(1,meter);
+            ResultSet res = preparedStatement.executeQuery();
+            return res ;
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+            return null ;
+        }
+
+    }
+
+    public ResultSet queryTax(){
+        try {
+            statement = conn.createStatement();
+            ResultSet res = statement.executeQuery("SELECT * from tax");
+            return res ;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null ;
+        }
 
     }
 

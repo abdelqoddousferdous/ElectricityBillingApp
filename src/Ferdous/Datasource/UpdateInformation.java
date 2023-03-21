@@ -95,8 +95,8 @@ public class UpdateInformation extends JFrame implements ActionListener{
         add(b2);
         
         try{
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer where meter = '"+meter+"'");
+            DataBase.getInstance().openDb();
+            ResultSet rs = DataBase.getInstance().customerQuery(meter);
             while(rs.next()){
                 l11.setText(rs.getString(1));
                 l12.setText(rs.getString(2));
@@ -107,9 +107,12 @@ public class UpdateInformation extends JFrame implements ActionListener{
                 t5.setText(rs.getString(7));
                 
             }
-        }catch(Exception e){}
+            DataBase.getInstance().closeDb();
+        }catch(Exception e){
+            DataBase.getInstance().closeDb();
+        }
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/update.jpg"));
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("Ferdous\\Graphics\\update.jpg"));
         Image i2  = i1.getImage().getScaledInstance(400, 300, Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         JLabel l8  = new JLabel(i3);
@@ -128,7 +131,7 @@ public class UpdateInformation extends JFrame implements ActionListener{
             String s7 = t5.getText();
             
             try{
-                Conn c = new Conn();
+                DataBase.getInstance().openDb();
                 c.s.executeUpdate("update customer set address = '"+s3+"', city = '"+s4+"', state = '"+s5+"', email = '"+s6+"', phone = '"+s7+"' where meter = '"+meter+"'");
                 JOptionPane.showMessageDialog(null, "Details Updated Successfully");
                 this.setVisible(false);

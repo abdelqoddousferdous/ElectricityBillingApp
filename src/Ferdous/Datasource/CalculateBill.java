@@ -1,9 +1,12 @@
-package Electricity;
+package Ferdous.Datasource;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.ResultSet;
 
 public class CalculateBill extends JFrame implements ActionListener{
     JLabel l1,l2,l3,l4,l5;
@@ -38,8 +41,8 @@ public class CalculateBill extends JFrame implements ActionListener{
         c1 = new Choice();
         c1.setBounds(200, 70, 180, 20);
         try{
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer");
+            DataBase.getInstance().openDb();
+            ResultSet rs = DataBase.getInstance().customerQuery();
             while(rs.next()){
                 c1.add(rs.getString("meter"));
             }
@@ -54,24 +57,30 @@ public class CalculateBill extends JFrame implements ActionListener{
         p.add(l12);
         
         try{
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer where meter = '"+c1.getSelectedItem()+"'");
+            DataBase.getInstance().openDb();
+            ResultSet rs = DataBase.getInstance().customerQuery(c1.getSelectedItem());
             while(rs.next()){
                 l11.setText(rs.getString("name"));
                 l12.setText(rs.getString("address"));
             }
-        }catch(Exception e){}
+            DataBase.getInstance().closeDb();
+        }catch(Exception e){
+            DataBase.getInstance().closeDb();
+        }
         
         c1.addItemListener(new ItemListener(){
             public void itemStateChanged(ItemEvent ae){
                 try{
-                    Conn c = new Conn();
-                    ResultSet rs = c.s.executeQuery("select * from customer where meter = '"+c1.getSelectedItem()+"'");
+                    DataBase.getInstance().openDb();
+                    ResultSet rs = DataBase.getInstance().customerQuery(c1.getSelectedItem());
                     while(rs.next()){
                         l11.setText(rs.getString("name"));
                         l12.setText(rs.getString("address"));
                     }
-                }catch(Exception e){}
+                    DataBase.getInstance().closeDb();
+                }catch(Exception e){
+                    DataBase.getInstance().closeDb();
+                }
             }
         });
         
@@ -105,7 +114,7 @@ public class CalculateBill extends JFrame implements ActionListener{
         b2.setBackground(Color.BLACK);
         b2.setForeground(Color.WHITE);
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/hicon2.jpg"));
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("Ferdous\\Graphics\\hicon2.jpg"));
         Image i2 = i1.getImage().getScaledInstance(180, 270,Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         l4 = new JLabel(i3);
@@ -153,8 +162,8 @@ public class CalculateBill extends JFrame implements ActionListener{
 
             int total_bill = 0;
             try{
-                Conn c = new Conn();
-                ResultSet rs = c.s.executeQuery("select * from tax");
+                DataBase.getInstance().openDb();
+                ResultSet rs = DataBase.getInstance().queryTax();
                 while(rs.next()){
                     total_bill = units_consumed * Integer.parseInt(rs.getString("cost_per_unit")); // 120 * 9
                     total_bill += Integer.parseInt(rs.getString("meter_rent"));
@@ -165,15 +174,17 @@ public class CalculateBill extends JFrame implements ActionListener{
                 }
             }catch(Exception e){}
 
-            String q = "insert into bill values('"+meter_no+"','"+month+"','"+units+"','"+total_bill+"', 'Not Paid')";
+             try{
+                DataBase.getInstance().openDb();
+               int row = DataBase.getInstance().billInsertionQuery(meter_no , month , units , total_bill);
+               if(row == 1) {
+                   JOptionPane.showMessageDialog(null, "Customer Bill Updated Successfully");
+                   this.setVisible(false);
+               }
 
-            try{
-                Conn c1 = new Conn();
-                c1.s.executeUpdate(q);
-                JOptionPane.showMessageDialog(null,"Customer Bill Updated Successfully");
-                this.setVisible(false);
             }catch(Exception aee){
                 aee.printStackTrace();
+                DataBase.getInstance().closeDb();
             }
 
         }else if(ae.getSource()== b2){
