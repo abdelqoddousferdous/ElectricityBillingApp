@@ -1,10 +1,11 @@
 package Electricity;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.sql.*;
+import Ferdous.Datasource.DataBase;
 import net.proteanit.sql.DbUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.ResultSet;
 
 public class BillDetails extends JFrame{
  
@@ -22,14 +23,15 @@ public class BillDetails extends JFrame{
         t1 = new JTable(y,x);
         
         try{
-            Conn c  = new Conn();
-            String s1 = "select * from bill where meter = " + meter;
-            ResultSet rs  = c.s.executeQuery(s1);
-            
+            DataBase.getInstance().openDb();
+            ResultSet rs = DataBase.getInstance().billQuery(meter);
             t1.setModel(DbUtils.resultSetToTableModel(rs));
+            DataBase.getInstance().closeDb();
             
         }catch(Exception e){
             e.printStackTrace();
+            DataBase.getInstance().closeDb();
+
         }
         
         

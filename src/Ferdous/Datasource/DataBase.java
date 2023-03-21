@@ -11,6 +11,8 @@ public class DataBase {
     private static PreparedStatement preparedStatement ;
     private static String  prepareQuery = "SELECT * from login where username = ? and password = ? and user = ? ";
     private static String prepareBillQuery = "select * from bill where meter = ? AND month = ?";
+    private static String prepareBillByMonth = "select * from bill where meter = ? ";
+
     private static String prepareMeterInsertion = "INSERT INTO meter values( ? , ? , ? , ?)";
     private static String prepareBillInsertion = "insert into bill values( ? , ? , ? ,? , 'Not Paid')";
 
@@ -100,6 +102,19 @@ public class DataBase {
             preparedStatement = conn.prepareStatement(prepareBillQuery);
             preparedStatement.setString(1,meter);
             preparedStatement.setString(2, month);
+            ResultSet res = preparedStatement.executeQuery();
+            return res ;
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null ;
+
+        }
+    }
+    public ResultSet billQuery(String meter){
+        try {
+            preparedStatement = conn.prepareStatement(prepareBillByMonth);
+            preparedStatement.setString(1,meter);
             ResultSet res = preparedStatement.executeQuery();
             return res ;
 
