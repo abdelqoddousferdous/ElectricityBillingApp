@@ -14,7 +14,7 @@ public class DataBase {
     private static String prepareMeterInsertion = "INSERT INTO meter values( ? , ? , ? , ?)";
     private static String prepareBillInsertion = "insert into bill values( ? , ? , ? ,? , 'Not Paid')";
 
-    private  static  String prepareCustomerUpdate = "update customer set address = '"+s3+"', city = '"+s4+"', state = '"+s5+"', email = '"+s6+"', phone = '"+s7+"' where meter = '"+meter+"'"
+    private  static  String prepareCustomerUpdate = "UPDATE customer set address = ?, city = ? , state = ? , email = ? , phone = ? where meter = ?" ;
 
 
     public static final String Login_Table = " login ";
@@ -129,6 +129,24 @@ public class DataBase {
         }catch (SQLException e){
             System.out.println(e.getMessage());
             return null ;
+        }
+
+    }
+    public int customerUpdateQuery(String address , String city , String state , String email , String phone ,String meter){
+        try {
+            preparedStatement = conn.prepareStatement(prepareCustomerUpdate);
+            preparedStatement.setString(1,address);
+            preparedStatement.setString(2,city);
+            preparedStatement.setString(3,state);
+            preparedStatement.setString(4,email);
+            preparedStatement.setString(5,phone);
+            preparedStatement.setString(6,meter);
+
+            int res = preparedStatement.executeUpdate();
+            return res ;
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+            return -1 ;
         }
 
     }

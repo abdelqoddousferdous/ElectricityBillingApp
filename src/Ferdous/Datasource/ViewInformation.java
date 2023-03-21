@@ -1,6 +1,8 @@
 
 package Electricity;
 
+import Ferdous.Datasource.DataBase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
@@ -75,8 +77,8 @@ public class ViewInformation extends JFrame implements ActionListener{
         add(l17);
         
         try{
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer where meter = '"+meter+"'");
+            DataBase.getInstance().openDb();
+            ResultSet rs = DataBase.getInstance().customerQuery(meter);
             while(rs.next()){
                 l11.setText(rs.getString(1));
                 l12.setText(rs.getString(2));

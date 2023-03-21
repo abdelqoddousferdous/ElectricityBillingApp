@@ -132,11 +132,16 @@ public class UpdateInformation extends JFrame implements ActionListener{
             
             try{
                 DataBase.getInstance().openDb();
-                c.s.executeUpdate("update customer set address = '"+s3+"', city = '"+s4+"', state = '"+s5+"', email = '"+s6+"', phone = '"+s7+"' where meter = '"+meter+"'");
-                JOptionPane.showMessageDialog(null, "Details Updated Successfully");
-                this.setVisible(false);
+               int row = DataBase.getInstance().customerUpdateQuery(s3,s4, s5, s6, s7,meter);
+               if(row == 1) {
+                   JOptionPane.showMessageDialog(null, "Details Updated Successfully");
+                   this.setVisible(false);
+               }
+               DataBase.getInstance().closeDb();
                 
-            }catch(Exception e){}
+            }catch(Exception e){
+                DataBase.getInstance().closeDb();
+            }
             
         }else if(ae.getSource() == b2){
             this.setVisible(false);
