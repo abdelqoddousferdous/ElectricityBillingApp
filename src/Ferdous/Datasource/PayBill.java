@@ -5,8 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 
 public class PayBill extends JFrame implements ActionListener{
@@ -112,9 +110,7 @@ public class PayBill extends JFrame implements ActionListener{
         }
 
         
-        c1.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent ae){
+        c1.addItemListener( (ae)->{
                 try{
                     DataBase.getInstance().openDb();
                     ResultSet rs= DataBase.getInstance().billQuery(meter , c1.getSelectedItem());
@@ -123,9 +119,12 @@ public class PayBill extends JFrame implements ActionListener{
                         l14.setText(rs.getString("total_bill"));
                         l15.setText(rs.getString("status"));
                     }
-                }catch(Exception e){}
-            }
-        });
+                    DataBase.getInstance().closeDb();
+                }catch(Exception e){
+                    DataBase.getInstance().closeDb();
+
+                }
+            });
         
         b1 = new JButton("Pay");
         b1.setBounds(100, 460, 100, 25);
@@ -158,7 +157,10 @@ public class PayBill extends JFrame implements ActionListener{
                 DataBase.getInstance().openDb();
                 DataBase.getInstance().billUpdateQuery(meter , c1.getSelectedItem());
                 
-            }catch(Exception e){}
+            }catch(Exception e){
+                DataBase.getInstance().closeDb();
+
+            }
             this.setVisible(false);
             new Paytm(meter).setVisible(true);
 
