@@ -1,9 +1,10 @@
-package Electricity;
+package Ferdous.Datasource;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
 public class GenerateBill extends JFrame implements ActionListener{
     JLabel l1, l2;
@@ -59,12 +60,12 @@ public class GenerateBill extends JFrame implements ActionListener{
     }
     public void actionPerformed(ActionEvent ae){
         try{
-            Conn c = new Conn();
+            DataBase.getInstance().openDb();
    
             String month = c2.getSelectedItem();
             t1.setText("\tReliance Power Limited\nELECTRICITY BILL FOR THE MONTH OF "+month+" ,2021\n\n\n");
             
-            ResultSet rs = c.s.executeQuery("select * from customer where meter="+meter);
+            ResultSet rs = DataBase.getInstance().customerQuery(meter);
             
             if(rs.next()){
                 t1.append("\n    Customer Name:"+rs.getString("name"));
@@ -78,7 +79,7 @@ public class GenerateBill extends JFrame implements ActionListener{
                 t1.append("\n");
             }
             
-            rs = c.s.executeQuery("select * from meter_info where meter_number = " + meter);
+            rs = DataBase.getInstance().meterInfoQuery(meter);
             
             if(rs.next()){
                 t1.append("\n    Meter Location:"+rs.getString("meter_location"));
@@ -88,7 +89,7 @@ public class GenerateBill extends JFrame implements ActionListener{
                 t1.append("\n    Days:               "+rs.getString("days"));
                 t1.append("\n");
             }
-            rs = c.s.executeQuery("select * from tax");
+            rs = DataBase.getInstance().queryTax();
             if(rs.next()){
                 t1.append("---------------------------------------------------------------");
                 t1.append("\n\n");
@@ -102,7 +103,7 @@ public class GenerateBill extends JFrame implements ActionListener{
                 
             }
             
-            rs = c.s.executeQuery("select * from bill where meter="+meter+" AND month = '"+c2.getSelectedItem()+"'");
+            rs = DataBase.getInstance().billQuery(meter , c2.getSelectedItem());
             
             if(rs.next()){
                 t1.append("\n    Current Month :\t"+rs.getString("month"));

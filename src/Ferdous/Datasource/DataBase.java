@@ -16,6 +16,7 @@ public class DataBase {
 
     private static String prepareMeterInsertion = "INSERT INTO meter values( ? , ? , ? , ?)";
     private static String prepareBillInsertion = "insert into bill values( ? , ? , ? ,? , 'Not Paid')";
+    public static  String prepareMeterInfo = "select * from meter_info where meter_number = ?";
 
     private  static  String prepareCustomerUpdate = "UPDATE customer set address = ?, city = ? , state = ? , email = ? , phone = ? where meter = ?" ;
 
@@ -64,6 +65,20 @@ public class DataBase {
             e.printStackTrace();
             return -1 ;
 
+        }
+
+    }
+
+    public  ResultSet meterInfoQuery(String meter){
+        try {
+            preparedStatement = conn.prepareStatement(prepareMeterInfo);
+            preparedStatement.setString(1,meter);
+
+            return preparedStatement.executeQuery();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null ;
         }
 
     }
