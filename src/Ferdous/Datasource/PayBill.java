@@ -1,9 +1,13 @@
-package Electricity;
+package Ferdous.Datasource;
 
-import java.awt.*;
-import java.awt.event.*;
+
 import javax.swing.*;
-import java.sql.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.ResultSet;
 
 public class PayBill extends JFrame implements ActionListener{
     JLabel l1,l2,l3,l4,l5, l6;
@@ -88,26 +92,32 @@ public class PayBill extends JFrame implements ActionListener{
         
         
         try{
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer where meter = '"+meter+"'");
+            DataBase.getInstance().openDb();
+            ResultSet rs = DataBase.getInstance().customerQuery(meter);
+
             while(rs.next()){
                 l11.setText(rs.getString("meter"));
                 l12.setText(rs.getString("name"));
             }
-            rs = c.s.executeQuery("select * from bill where meter = '"+meter+"' AND month = 'January' ");
+            rs = DataBase.getInstance().billQuery(meter);
+
             while(rs.next()){
                 l13.setText(rs.getString("units"));
                 l14.setText(rs.getString("total_bill"));
                 l15.setText(rs.getString("status"));
             }
-        }catch(Exception e){}
+            DataBase.getInstance().closeDb();
+        }catch(Exception e){
+            DataBase.getInstance().closeDb();
+        }
+
         
         c1.addItemListener(new ItemListener(){
             @Override
             public void itemStateChanged(ItemEvent ae){
                 try{
-                    Conn c = new Conn();
-                    ResultSet rs = c.s.executeQuery("select * from bill where meter = '"+meter+"' AND month = '"+c1.getSelectedItem()+"'");
+                    DataBase.getInstance().openDb();
+                    ResultSet rs= DataBase.getInstance().billQuery(meter , c1.getSelectedItem());
                     while(rs.next()){
                         l13.setText(rs.getString("units"));
                         l14.setText(rs.getString("total_bill"));
@@ -130,7 +140,7 @@ public class PayBill extends JFrame implements ActionListener{
         b2.setBackground(Color.BLACK);
         b2.setForeground(Color.WHITE);
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/bill.png"));
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("Ferdous\\Graphics\\bill.png"));
         Image i2 = i1.getImage().getScaledInstance(600, 300,Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         JLabel l21 = new JLabel(i3);
@@ -145,8 +155,8 @@ public class PayBill extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == b1){
             try{
-                Conn c = new Conn();
-                c.s.executeQuery("update bill status = 'Paid' where meter = '"+meter+"' AND month = '"+c1.getSelectedItem()+"'");
+                DataBase.getInstance().openDb();
+                DataBase.getInstance().billUpdateQuery(meter , c1.getSelectedItem());
                 
             }catch(Exception e){}
             this.setVisible(false);
