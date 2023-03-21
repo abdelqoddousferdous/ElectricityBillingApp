@@ -1,9 +1,10 @@
 package Ferdous.Datasource;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
 public class LastBill extends JFrame implements ActionListener{
     JLabel l1;
@@ -39,9 +40,9 @@ public class LastBill extends JFrame implements ActionListener{
     }
     public void actionPerformed(ActionEvent ae){
         try{
-            Conn c = new Conn();
+            DataBase.getInstance().openDb();
 
-            ResultSet rs = c.s.executeQuery("select * from customer where meter="+t2.getSelectedText());
+            ResultSet rs = DataBase.getInstance().customerQuery(t2.getSelectedText());
             
             if(rs.next()){
                 t1.append("\n    Customer Name:"+rs.getString("name"));
@@ -56,9 +57,7 @@ public class LastBill extends JFrame implements ActionListener{
             }
 
             t1.append("Details of the Last Bills\n\n\n");
-            
-            rs = c.s.executeQuery("select * from bill where meter="+t2.getSelectedText());
-            
+            rs = DataBase.getInstance().billQuery(t2.getSelectedText());
             while(rs.next()){
                 t1.append("       "+ rs.getString("month") + "           " +rs.getString("amount") + "\n");
             }
